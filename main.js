@@ -9,10 +9,7 @@ const URL = 'http://localhost:3000';
 
 // instead of saving to local storage, insert each query into database
 
-// getQuery();
-
 $.get(`${URL}/query`, function (data) {
-  console.log(data[data.length - 1]);
   if (data) {
     if (pageURL.includes('https://www.google.com/search?')) {
       newGoogleQuery();
@@ -55,20 +52,56 @@ function saveQuery(cQ) {
 function overlayMaker(cQ) {
   return `<div id="query-overlay">
             You are trying to understand:
-            ${cQ}
+            <div id="current-query">
+              ${cQ}
+            </div>
             <div id="overlay-buttons">
-              <button type="button" onclick="(function() {
-                $.post('http://localhost:3000/completedqueries', { query: '${cQ}', solution: '${pageURL}' }, function (data) {
+              <button type="button" id="complete-query" onclick="(function() {
+
+                let thisQuery = $('#current-query').text().trim();
+              
+                $.post('http://localhost:3000/completedqueries', { query: thisQuery, solution: '${pageURL}' }, function (data) {
                   console.log(data);
                 });
+               
+                $.post('http://localhost:3000/delquery', { query: thisQuery }, function(result) {
+                  console.log(result);
+                });
+
+                $.get('http://localhost:3000/query', function (data) {
+                  if (data) {
+                    let nQ = data[data.length - 1].query
+                    $('#current-query').text(nQ);
+                  } else {
+                    $('#current-query').text('you are free of questions');
+                  }
+                });
               })()">complete</button>
-              <button type="button">remove</button>
+
+              <button type="button" id="complete query" onclick="(function() {
+                
+                let thisQuery = $('#current-query').text().trim();
+                
+                $.post('http://localhost:3000/delquery', { query: thisQuery }, function(result) {
+                  console.log(result);
+                });
+                
+                $.get('http://localhost:3000/query', function (data) {
+                  if (data) {
+                    let nQ = data[data.length - 1].query
+                    $('#current-query').text(nQ);
+                  } else {
+                    $('#current-query').text('you are free of questions');
+                  }
+                });
+
+              })()">remove</button>
               <button type="button">move down one</button>
             </div>
           </div>`;
 }
 
-// HELPER FUNCTIONSa
+// HELPER FUNCTIONS
 
 // get domain info
 function extractHostname(url) {
