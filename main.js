@@ -1,6 +1,7 @@
 let allContent = $('body');
 let pageURL = window.location.href;
 let currQuery;
+const URL = 'http://localhost:3000';
 
 // check if there is a querry in chrome local storage
 // if there is, display it in the overlay
@@ -10,7 +11,7 @@ let currQuery;
 
 // getQuery();
 
-$.get('http://localhost:3000', function (data) {
+$.get(`${URL}/query`, function (data) {
   console.log(data[data.length - 1]);
   if (data) {
     if (pageURL.includes('https://www.google.com/search?')) {
@@ -34,27 +35,37 @@ function newGoogleQuery() {
   saveQuery(cQ);
 }
 
+
+// insert completed query (query and solution) into completedqueries collection
+// remove incomplete query from query collection
+// refresh overlay with next incomplete query
+
+function completeQuery() {
+  $.post(`${URL}/completedqueries`, { query: 'testQ', solution: pageURL }, function (data) {
+    console.log(data);
+  });
+}
+
+function saveQuery(cQ) {
+  $.post(`${URL}/query`, { query: cQ }, function (data) {
+    console.log(data);
+  });
+}
+
 function overlayMaker(cQ) {
   return `<div id="query-overlay">
             You are trying to understand:
             ${cQ}
             <div id="overlay-buttons">
-              <button type="button">complete</button>
+              <button type="button" onclick="(function() {
+                $.post('http://localhost:3000/completedqueries', { query: '${cQ}', solution: '${pageURL}' }, function (data) {
+                  console.log(data);
+                });
+              })()">complete</button>
               <button type="button">remove</button>
               <button type="button">move down one</button>
             </div>
           </div>`;
-}
-
-
-function saveQuery(cQ) {
-  $.post('http://localhost:3000', { query: cQ }, function (data) {
-    console.log(data);
-  });
-
-  // chrome.storage.local.set({ currQuery: cQ }, function () {
-  //   console.log(`success inserting ${{ currQuery: cQ }} into chrome local`)
-  // });
 }
 
 // HELPER FUNCTIONSa
