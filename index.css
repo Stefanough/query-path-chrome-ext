@@ -3,7 +3,8 @@
 
   margin: auto;
   /* opacity: 1.0; */
-  position: absolute;
+  position: fixed;
+  right: 0;
   border: 2px solid orangered;
   /* display: none; */
   text-align: center;
