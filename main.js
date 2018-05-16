@@ -8,13 +8,15 @@ let currQuery;
 
 // instead of saving to local storage, insert each query into database
 
-chrome.storage.local.get('currQuery', function (result) {
-  if (result) {
+// getQuery();
+
+$.get('http://localhost:3000', function (data) {
+  console.log(data[data.length - 1]);
+  if (data) {
     if (pageURL.includes('https://www.google.com/search?')) {
       newGoogleQuery();
     } else {
-      console.log(`found ${JSON.stringify(result)} in local storage`);
-      allContent.prepend(overlayMaker(result.currQuery));
+      allContent.prepend(overlayMaker(data[data.length - 1].query));
     }
   } else {
     console.log('no query');
@@ -22,11 +24,14 @@ chrome.storage.local.get('currQuery', function (result) {
   }
 });
 
+chrome.storage.local.get('currQuery', function (result) {
+});
+
 function newGoogleQuery() {
   console.log('you better be on Google\'s search page!!');
   let cQ = document.getElementById('lst-ib').value;
   allContent.prepend(overlayMaker(cQ));
-  saveLocal(cQ);
+  saveQuery(cQ);
 }
 
 function overlayMaker(cQ) {
@@ -41,16 +46,15 @@ function overlayMaker(cQ) {
           </div>`;
 }
 
-function saveLocal(cQ) {
-  // let url = 'localhost';
-  $.post('http://localhost:3000', { query: cQ }, function(data) {
-    console.log('help');
+
+function saveQuery(cQ) {
+  $.post('http://localhost:3000', { query: cQ }, function (data) {
     console.log(data);
   });
-   
- // chrome.storage.local.set({ currQuery: cQ }, function () {
- //   console.log(`success inserting ${{ currQuery: cQ }} into chrome local`)
- // });
+
+  // chrome.storage.local.set({ currQuery: cQ }, function () {
+  //   console.log(`success inserting ${{ currQuery: cQ }} into chrome local`)
+  // });
 }
 
 // HELPER FUNCTIONSa
