@@ -4,7 +4,8 @@
   "version": "1.0",
   "description": "chrome extension for query path project",
   "permissions": [
-    "storage"
+    "storage",
+    "http://localhost/*"
   ],
   "content_scripts": [
     {

@@ -42,9 +42,15 @@ function overlayMaker(cQ) {
 }
 
 function saveLocal(cQ) {
-  chrome.storage.local.set({ currQuery: cQ }, function () {
-    console.log(`success inserting ${{ currQuery: cQ }} into chrome local`)
+  // let url = 'localhost';
+  $.post('http://localhost:3000', { query: cQ }, function(data) {
+    console.log('help');
+    console.log(data);
   });
+   
+ // chrome.storage.local.set({ currQuery: cQ }, function () {
+ //   console.log(`success inserting ${{ currQuery: cQ }} into chrome local`)
+ // });
 }
 
 // HELPER FUNCTIONSa
