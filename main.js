@@ -17,7 +17,7 @@ $.get(`${URL}/query`, function (data) {
       allContent.prepend(overlayMaker(data[data.length - 1].query));
     }
   } else {
-    console.log('no query');
+    // console.log('no query');
     allContent.prepend(overlayMaker('no query'));
   }
 });
@@ -26,7 +26,7 @@ chrome.storage.local.get('currQuery', function (result) {
 });
 
 function newGoogleQuery() {
-  console.log('you better be on Google\'s search page!!');
+  // console.log('you better be on Google\'s search page!!');
   let cQ = document.getElementById('lst-ib').value;
   allContent.prepend(overlayMaker(cQ));
   saveQuery(cQ);
@@ -39,13 +39,13 @@ function newGoogleQuery() {
 
 function completeQuery() {
   $.post(`${URL}/completedqueries`, { query: 'testQ', solution: pageURL }, function (data) {
-    console.log(data);
+    // console.log(data);
   });
 }
 
 function saveQuery(cQ) {
   $.post(`${URL}/query`, { query: cQ }, function (data) {
-    console.log(data);
+    // console.log(data);
   });
 }
 
@@ -78,7 +78,7 @@ function overlayMaker(cQ) {
                 });
               })()">complete</button>
 
-              <button type="button" id="complete query" onclick="(function() {
+              <button type="button" id="delete-query" onclick="(function() {
                 
                 let thisQuery = $('#current-query').text().trim();
                 
@@ -96,7 +96,6 @@ function overlayMaker(cQ) {
                 });
 
               })()">remove</button>
-              <button type="button">move down one</button>
             </div>
           </div>`;
 }
